@@ -1,75 +1,271 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert, Image } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+export default function SignUpScreen() {
+  const [userType, setUserType] = useState<'parent' | 'pediatrician'>('parent');
 
-export default function HomeScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+    <ScrollView style={styles.scrollView}>
+      <View style={styles.container}>
+        <Image 
+          source={require('../../assets/smile2steps-logo.png')} 
+          style={styles.logo} 
+          resizeMode="contain"
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+        
+        <Text style={styles.title}>Smile2Steps Sign Up</Text>
+
+        <View style={styles.toggleContainer}>
+          <TouchableOpacity
+            onPress={() => setUserType('parent')}
+            style={[
+              styles.toggleButton, 
+              userType === 'parent' ? styles.activeToggle : styles.inactiveToggle
+            ]}
+          >
+            <Text style={userType === 'parent' ? styles.activeToggleText : styles.inactiveToggleText}>
+              Parent
+            </Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity
+            onPress={() => setUserType('pediatrician')}
+            style={[
+              styles.toggleButton, 
+              userType === 'pediatrician' ? styles.activeToggle : styles.inactiveToggle
+            ]}
+          >
+            <Text style={userType === 'pediatrician' ? styles.activeToggleText : styles.inactiveToggleText}>
+              Pediatrician
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.formContainer}>
+          <View style={styles.inputRow}>
+            <View style={styles.inputGroup}>
+              <Text style={styles.inputLabel}>Phone Number *</Text>
+              <TextInput 
+                style={styles.input} 
+                placeholder="" 
+                keyboardType="phone-pad" 
+              />
+            </View>
+            
+            <View style={styles.inputGroup}>
+              <Text style={styles.inputLabel}>Email</Text>
+              <TextInput 
+                style={styles.input} 
+                placeholder="" 
+                keyboardType="email-address" 
+              />
+            </View>
+          </View>
+          
+          <View style={styles.inputRow}>
+            <View style={styles.inputGroup}>
+              <Text style={styles.inputLabel}>First Name *</Text>
+              <TextInput style={styles.input} placeholder="" />
+            </View>
+            
+            <View style={styles.inputGroup}>
+              <Text style={styles.inputLabel}>Last Name *</Text>
+              <TextInput style={styles.input} placeholder="" />
+            </View>
+          </View>
+          
+          {userType === 'parent' ? (
+            <>
+              <View style={styles.inputRow}>
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>Relationship with Child *</Text>
+                  <View style={styles.selectInput}>
+                    <TextInput style={styles.input} placeholder="" />
+                    <Text style={styles.dropdownIcon}>▼</Text>
+                  </View>
+                </View>
+                
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>Address *</Text>
+                  <TextInput style={styles.input} placeholder="" />
+                </View>
+              </View>
+            </>
+          ) : (
+            <>
+              <View style={styles.inputRow}>
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>Clinic Name *</Text>
+                  <TextInput style={styles.input} placeholder="" />
+                </View>
+                
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>Specialization *</Text>
+                  <TextInput style={styles.input} placeholder="" />
+                </View>
+              </View>
+            </>
+          )}
+          
+          <View style={styles.inputRow}>
+            <View style={styles.inputGroup}>
+              <Text style={styles.inputLabel}>Password *</Text>
+              <TextInput style={styles.input} placeholder="" secureTextEntry />
+            </View>
+            
+            <View style={styles.inputGroup}>
+              <Text style={styles.inputLabel}>Confirm Password *</Text>
+              <TextInput style={styles.input} placeholder="" secureTextEntry />
+            </View>
+          </View>
+          
+          <TouchableOpacity style={styles.signUpButton} onPress={() => Alert.alert('Signed Up')}>
+            <Text style={styles.signUpText}>Sign Up</Text>
+          </TouchableOpacity>
+          
+          <View style={styles.termsContainer}>
+            <View style={styles.checkboxContainer}>
+              <View style={styles.checkbox} />
+            </View>
+            <Text style={styles.termsText}>
+              I agree to the <Text style={styles.link}>Terms & Conditions</Text>
+            </Text>
+          </View>
+          
+          <Text style={styles.loginText}>
+            Already have an account? Login (
+            <Text style={styles.link}>Parent</Text> / 
+            <Text style={styles.link}>Pediatrician</Text>)
+          </Text>
+        </View>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  scrollView: {
+    backgroundColor: '#fff',
+  },
+  container: {
+    flex: 1,
+    padding: 20,
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  logo: {
+    width: 120,
+    height: 120,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  toggleContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    maxWidth: 600,
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  toggleButton: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: 'center',
+    borderRadius: 5,
+    marginHorizontal: 5,
+  },
+  activeToggle: {
+    backgroundColor: '#4285F4',
+  },
+  inactiveToggle: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#ccc',
+  },
+  activeToggleText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  inactiveToggleText: {
+    color: '#666',
+  },
+  formContainer: {
+    width: '100%',
+    maxWidth: 600,
+  },
+  inputRow: {
+    flexDirection: 'row',
+    marginBottom: 15,
+  },
+  inputGroup: {
+    flex: 1,
+    marginHorizontal: 5,
+  },
+  inputLabel: {
+    marginBottom: 5,
+    fontWeight: '500',
+    color: '#333',
+  },
+  input: {
+    height: 45,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    backgroundColor: '#F0F8FF',
+  },
+  selectInput: {
+    position: 'relative',
+  },
+  dropdownIcon: {
+    position: 'absolute',
+    right: 15,
+    top: 12,
+    fontSize: 10,
+    color: '#777',
+  },
+  signUpButton: {
+    backgroundColor: '#777',
+    paddingVertical: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 15,
+  },
+  signUpText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  termsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    marginBottom: 15,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  checkboxContainer: {
+    marginRight: 10,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  checkbox: {
+    width: 18,
+    height: 18,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 3,
+  },
+  termsText: {
+    color: '#333',
+  },
+  link: {
+    color: '#0000FF',
+    textDecorationLine: 'underline',
+  },
+  loginText: {
+    textAlign: 'center',
+    marginBottom: 20,
   },
 });
